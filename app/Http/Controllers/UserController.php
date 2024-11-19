@@ -11,7 +11,7 @@ class UserController extends Controller
     /**
      * @return string
      */
-    public function index(): string {
+    public function index() : string {
         return 'Get method';
     }
 
@@ -19,7 +19,7 @@ class UserController extends Controller
      * @param UserCreateRequest $request
      * @return string
      */
-    public function create(UserCreateRequest $request): string {
+    public function create(UserCreateRequest $request) : string {
 //        $request->validated();
 //        $request->input('key');
 //        $request->get('key');
@@ -33,13 +33,13 @@ class UserController extends Controller
      * @param int $id
      * @return string
      */
-    public function update(int $id): string {
+    public function update(int $id) : string {
         return 'Update method with id: '.$id;
     }
     /**
      * @return string
      */
-    public function test(): string {
+    public function test() : string {
         return 'Test method';
     }
 
@@ -47,7 +47,7 @@ class UserController extends Controller
      * @param int $id
      * @return string
      */
-    public function delete(int $id): string {
+    public function delete(int $id) : string {
         return 'Delete method with id: '.$id;
     }
 }

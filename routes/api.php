@@ -3,6 +3,7 @@
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +31,11 @@ Route::group(['prefix' => 'users'], function () {
     Route::put('/test', [UserController::class, 'test']);
     Route::put('/{id}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/{id}', [UserController::class, 'delete'])->name('user.delete');
+});
+
+Route::group(['prefix' => 'company'], function () {
+   Route::get('/', [CompanyController::class, 'index'])->name('company.index');
+   Route::post('/', [CompanyController::class, 'create'])->name('company.create');
+   Route::put('/{id}', [CompanyController::class, 'update'])->name('company.update');
+   Route::delete('/{id}', [CompanyController::class, 'delete'])->name('company.delete');
 });
