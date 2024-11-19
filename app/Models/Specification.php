@@ -6,26 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class User extends Model
+class Specification extends Model
 {
     use HasFactory;
-
-    protected $table = 'users';
-
-//    protected $fillable = [
-//        'name',
-//        'last_name',
-//        'email',
-//        'password',
-//    ];
-
     protected $guarded = [];
 
     /**
      * @return BelongsToMany
      */
-    public function specifications(): BelongsToMany
+    public function users(): BelongsToMany
     {
-        return $this->belongsToMany(Specification::class);
+        return $this->belongsToMany(User::class);
     }
 }
