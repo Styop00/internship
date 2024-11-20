@@ -20,13 +20,19 @@ class UserController extends Controller
      * @return string
      */
     public function create(UserCreateRequest $request): string {
-//        $request->validated();
-//        $request->input('key');
-//        $request->get('key');
-//        $request->all(['key']);
-//        $request->all();
-//        request()->all();
-        return 'Create method';
+
+        DB::enableQueryLog();
+        DB::beginTransaction();
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'last_name' => $request->last_name,
+            'password' => Hash::make('password'),
+        ]);
+
+        DB::commit();
+        return $user;
     }
 
     /**

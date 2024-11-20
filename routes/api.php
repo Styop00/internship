@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CompanyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +28,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'users'], function () {
     Route::get('/', [UserController::class, 'index'])->name('user.index');
     Route::post('/', [UserController::class, 'create'])->name('user.create');
-    Route::put('/test', [UserController::class, 'test']);
     Route::put('/{id}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/{id}', [UserController::class, 'delete'])->name('user.delete');
+});
+
+Route::group(['prefix' => 'companies'], function () {
+    Route::get('/', [CompanyController::class, 'index'])->name('user.index');
+    Route::post('/', [CompanyController::class, 'create'])->name('user.create');
+    Route::put('/{id}', [CompanyController::class, 'update'])->name('user.update');
+    Route::delete('/{id}', [CompanyController::class, 'delete'])->name('user.delete');
 });
