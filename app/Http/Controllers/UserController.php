@@ -2,58 +2,86 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserCreateRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     /**
-     * @return string
+     * @return JsonResponse
      */
-    public function index(): string {
-        return 'Get method';
+    public function index(): JsonResponse {
+        $users = User::with(['specifications'])->get();
+//        $users = User::query()
+//            ->select(['users.id', 'users.name', 'users.email', 'specifications.title'])
+//            ->leftJoin('specification_user', 'specification_user.user_id', '=', 'users.id')
+//            ->leftJoin('specifications', 'specification_user.specification_id', '=', 'specifications.id')
+//            ->get();
+        return response()->json($users);
     }
 
     /**
      * @param UserCreateRequest $request
-     * @return string
+     * @return JsonResponse
      */
-    public function create(UserCreateRequest $request): string {
+    public function create(UserCreateRequest $request): JsonResponse {
+        try {
+            DB::beginTransaction();
+            $user =  User::create([
+                'name'      => $request->name,
+                'email'     => $request->email,
+                'last_name' => $request->last_name,
+                'password'  => Hash::make('password'),
+            ]);
 
-        DB::enableQueryLog();
-        DB::beginTransaction();
+            $user->specifications()->attach([
+                'specification_id' => 1
+            ]);
 
-        $user = User::create([
+            DB::commit();
+            return response()->json($user);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+            ]);
+        }
+
+    }
+
+    public function show(User $user): JsonResponse
+    {
+//        with(['employees.projects', 'owners']);
+//        $user = User::find($id);
+//        $user = User::where('id', $id)->first();
+
+        return response()->json($user);
+    }
+
+    /**
+     * @param int $id
+     * @param UpdateUserRequest $request
+     * @return int
+     */
+    public function update(int $id, UpdateUserRequest $request): int {
+        return User::where('id', $id)->update([
             'name' => $request->name,
-            'email' => $request->email,
-            'last_name' => $request->last_name,
-            'password' => Hash::make('password'),
         ]);
-
-        DB::commit();
-        return $user;
     }
 
     /**
      * @param int $id
-     * @return string
+     * @return int
      */
-    public function update(int $id): string {
-        return 'Update method with id: '.$id;
-    }
-    /**
-     * @return string
-     */
-    public function test(): string {
-        return 'Test method';
-    }
-
-    /**
-     * @param int $id
-     * @return string
-     */
-    public function delete(int $id): string {
-        return 'Delete method with id: '.$id;
+    public function delete(int $id): int {
+//        $user = User::find($id);
+//        if ($user) {
+//            $user->delete();
+//        }
+        return User::where('id', $id)->delete();
     }
 }
