@@ -81,9 +81,8 @@ class CompanyController extends Controller
 //        ]);
 
         return Company::find($id)->update([
-            'name' => $request->name,
-            'address' => $request->address,
-            'email' => $request->email,
+            'employees.*.position' => $request->position,
+            'employees.*.specification' => $request->specification,
         ]);
     }
 

@@ -13,7 +13,3 @@ use App\Http\Controllers\PagesController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-
-Route::get('/test', [TestController::class, 'test']);
-Route::get('/', [PagesController::class, 'main']);
