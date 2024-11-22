@@ -3,30 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\CompanyCreateRequest;
-use App\Http\Requests\CompanyDeleteRequest;
 use App\Http\Requests\CompanyUpdateRequest;
+use Illuminate\Support\Facades\DB;
 
 class CompanyController extends Controller
 {
     /**
-     * @return string
+     * @return JsonResponse
      */
-    public function index(Request $request): string
+    public function index(): JsonResponse
     {
-        $companies = $request->all();
-        return response()->json([
-            'message' => 'Company updated successfully',
-            'data' => $companies
-        ]);
+        $companies = Company::all();
+        return response()->json($companies);
     }
 
     /**
      * @param CompanyCreateRequest $request
-     * @return string
+     * @return JsonResponse
      */
-    public function create(CompanyCreateRequest $request): string
+    public function create(CompanyCreateRequest $request): JsonResponse
     {
 //        $request->validated();
 //        $request->input('key');
@@ -35,29 +32,45 @@ class CompanyController extends Controller
 //        $request->all();
 //        request()->all();
 
-//        $validatedData = $request->validated();
-//        $company = Company::create($validatedData);
+        try {
+            DB::beginTransaction();
+            $company = Company::create([
+                'name' => $request->name,
+                'address' => $request->address,
+                'email' => $request->email,
+            ]);
 
-        $company = $request->all();
+            DB::commit();
+            return response()->json($company);
 
-//        return response()->json([
-//            'message' => 'Company created successfully',
-//            'data' => $company
-//        ], 201);
-        return response()->json([
-            'message' => 'Company created successfully',
-            'data' => $company
-        ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+            ]);
+        }
     }
 
     /**
-     * @param int $id
-     * @return string
+     * @param Company $company
+     * @return JsonResponse
      */
-    public function update(CompanyUpdateRequest $request, int $id): string
+
+    /*    public function show(Company $company) : JsonResponse {
+            $company = Company::find($id);
+
+            return response()->json($company);
+        }*/
+
+    /**
+     * @param int $id
+     * @param CompanyUpdateRequest $request
+     * @return int
+     */
+    public function update(int $id, CompanyUpdateRequest $request): int
     {
 //        $company = Company::find($id);
-        $company = $request->find($id);
+//        $company = $request->find($id);
 //        if (!$company) return response()->json(['message' => 'Company not found'],404);
 //        $validatedData = $request->validated();
 //        $company->update($validatedData);
@@ -66,24 +79,20 @@ class CompanyController extends Controller
 //            'message' => 'Company updated successfully',
 //            'data' => $company
 //        ]);
-        return response()->json([
-            'message' => 'Company updated successfully',
-            'data' => $company
+
+        return Company::find($id)->update([
+            'name' => $request->name,
+            'address' => $request->address,
+            'email' => $request->email,
         ]);
     }
 
     /**
      * @param int $id
-     * @return string
+     * @return int
      */
-    public function delete(CompanyDeleteRequest $request, int $id): string
+    public function delete(int $id): int
     {
-//        $company = Company::find($id);
-//        $company = $request->find($id);
-
-//        if (!$company) return response()->json(['message' => 'Company not found', 404]);
-//        $validatedData = $request->validated();
-//        $company->delete();
-        return response()->json(['message' => 'Company deleted successfully']);
+        return Company::find($id)->delete();
     }
 }

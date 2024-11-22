@@ -22,7 +22,17 @@ class CompanyUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'employees.*.position' => 'required|string|max:255|in:developer,qa,pm',
+            'employees.*.specification' => 'string|required_if:employees.*.position,developer|in:fullstack,frontend,backend',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'employees.*.position.required' => 'Each employee\'s position is required.',
+            'employees.*.position.in' => 'The position must be one of: developer, qa, pm.',
+            'employees.*.specification.required_if' => 'The specification of developer position can be one of: fullstack, frontend, backend.',
         ];
     }
 }
