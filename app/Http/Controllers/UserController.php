@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Contracts\UserRepositoryInterface;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Models\User;
@@ -11,11 +12,19 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+
+    /**
+     * @param UserRepositoryInterface $userRepository
+     */
+    public function __construct(protected UserRepositoryInterface $userRepository)
+    {
+    }
+
     /**
      * @return JsonResponse
      */
     public function index(): JsonResponse {
-        $users = User::with(['specifications'])->get();
+        $users = $this->userRepository->all();
 //        $users = User::query()
 //            ->select(['users.id', 'users.name', 'users.email', 'specifications.title'])
 //            ->leftJoin('specification_user', 'specification_user.user_id', '=', 'users.id')
@@ -31,7 +40,7 @@ class UserController extends Controller
     public function create(UserCreateRequest $request): JsonResponse {
         try {
             DB::beginTransaction();
-            $user =  User::create([
+            $user = $this->userRepository->create([
                 'name'      => $request->name,
                 'email'     => $request->email,
                 'last_name' => $request->last_name,
@@ -53,6 +62,10 @@ class UserController extends Controller
 
     }
 
+    /**
+     * @param User $user
+     * @return JsonResponse
+     */
     public function show(User $user): JsonResponse
     {
 //        with(['employees.projects', 'owners']);
@@ -68,9 +81,7 @@ class UserController extends Controller
      * @return int
      */
     public function update(int $id, UpdateUserRequest $request): int {
-        return User::where('id', $id)->update([
-            'name' => $request->name,
-        ]);
+        return $this->userRepository->update(['name' => $request->name], $id);
     }
 
     /**
@@ -82,6 +93,6 @@ class UserController extends Controller
 //        if ($user) {
 //            $user->delete();
 //        }
-        return User::where('id', $id)->delete();
+        return $this->userRepository->delete($id);
     }
 }
