@@ -41,6 +41,11 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+$app->singleton(
+    \App\Http\Contracts\UserRepositoryInterface::class,
+    \App\Http\Repositories\UserRepository::class
+);
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application
