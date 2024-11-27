@@ -25,13 +25,13 @@ class CompanyCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-//            'email' => 'required|email:rfc,dns|unique:companies,email',
+            //            'email' => 'required|email:rfc,dns',
+            'email' => 'required|email:rfc,dns|unique:companies,email',
             'address' => 'nullable|string',
-            'email' => 'required|email:rfc,dns',
             'owner.*name' => 'required|string|max:255',
-//            'owner.*email' => 'required|email:rfc,dns|unique:owner,email',
-            'owner.*email' => 'required|email:rfc,dns',
-            'employees.*name' => 'required|string|max:255',
+//            'owner.*email' => 'required|email:rfc,dns',
+            'owner.*email' => 'required|email:rfc,dns|unique:company_owner,email',
+            'employees.*.name' => 'required|string|max:255',
 //            'employees.*email' => 'required|email:rfc,dns|unique:employees,email',
             'employees.*.email' => 'required|email:rfc,dns',
             'employees.*.position' => 'required|string|max:255|in:developer,qa,pm',

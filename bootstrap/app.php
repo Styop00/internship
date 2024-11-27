@@ -11,6 +11,8 @@
 |
 */
 
+use App\Http\Contracts\CompanyRepositoryInterface;
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
@@ -39,6 +41,16 @@ $app->singleton(
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
+);
+
+$app->singleton(
+    \App\Http\Contracts\UserRepositoryInterface::class,
+    \App\Http\Repositories\UserRepository::class
+);
+
+$app->singleton(
+    CompanyRepositoryInterface::class,
+    \App\Http\Repositories\CompanyRepository::class
 );
 
 /*

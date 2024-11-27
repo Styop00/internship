@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CompanyUpdateRequest extends FormRequest
 {
@@ -34,5 +36,15 @@ class CompanyUpdateRequest extends FormRequest
             'employees.*.position.in' => 'The position must be one of: developer, qa, pm.',
             'employees.*.specification.required_if' => 'The specification of developer position can be one of: fullstack, frontend, backend.',
         ];
+    }
+
+    /**
+     * @param Validator $validator
+     */
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => $validator->messages()->first()
+        ]));
     }
 }

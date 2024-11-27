@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Contracts\UserRepositoryInterface;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Models\User;
@@ -11,12 +12,19 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+
+    /**
+     * @param UserRepositoryInterface $userRepository
+     */
+    public function __construct(protected UserRepositoryInterface $userRepository)
+    {
+    }
+
     /**
      * @return JsonResponse
      */
-    public function index(): JsonResponse
-    {
-        $users = User::with(['specifications'])->get();
+    public function index(): JsonResponse {
+        $users = $this->userRepository->all();
 //        $users = User::query()
 //            ->select(['users.id', 'users.name', 'users.email', 'specifications.title'])
 //            ->leftJoin('specification_user', 'specification_user.user_id', '=', 'users.id')
@@ -29,15 +37,14 @@ class UserController extends Controller
      * @param UserCreateRequest $request
      * @return JsonResponse
      */
-    public function create(UserCreateRequest $request): JsonResponse
-    {
+    public function create(UserCreateRequest $request): JsonResponse {
         try {
             DB::beginTransaction();
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
+            $user = $this->userRepository->create([
+                'name'      => $request->name,
+                'email'     => $request->email,
                 'last_name' => $request->last_name,
-                'password' => Hash::make('password'),
+                'password'  => Hash::make('password'),
             ]);
 
             $user->specifications()->attach([
@@ -52,15 +59,16 @@ class UserController extends Controller
                 'status' => 'error',
             ]);
         }
+
     }
 
+    /**
+     * @param User $user
+     * @return JsonResponse
+     */
     public function show(User $user): JsonResponse
     {
-//        $company->load(['']);
-//        with(['employees.projects', 'owner'])
-
-
-
+//        with(['employees.projects', 'owners']);
 //        $user = User::find($id);
 //        $user = User::where('id', $id)->first();
 
@@ -72,23 +80,19 @@ class UserController extends Controller
      * @param UpdateUserRequest $request
      * @return int
      */
-    public function update(int $id, UpdateUserRequest $request): int
-    {
-        return User::where('id', $id)->update([
-            'name' => $request->name,
-        ]);
+    public function update(int $id, UpdateUserRequest $request): int {
+        return $this->userRepository->update(['name' => $request->name], $id);
     }
 
     /**
      * @param int $id
      * @return int
      */
-    public function delete(int $id): int
-    {
+    public function delete(int $id): int {
 //        $user = User::find($id);
 //        if ($user) {
 //            $user->delete();
 //        }
-        return User::where('id', $id)->delete();
+        return $this->userRepository->delete($id);
     }
 }
