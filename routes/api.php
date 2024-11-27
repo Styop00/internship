@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,9 +26,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Route::delete('/users/{id}', [UserController::class, 'delete'])->name('user.delete');
 
 Route::group(['prefix' => 'users'], function () {
-    Route::get('/', [UserController::class, 'index'])->name('user.index');
-    Route::post('/', [UserController::class, 'create'])->name('user.create');
+    Route::group(['middleware' => ['auth:sanctum']], function () {
+        Route::get('/', [UserController::class, 'index'])->name('user.index');
+        Route::post('/', [UserController::class, 'create'])->name('user.create');
+    });
     Route::put('/{id}', [UserController::class, 'update'])->name('user.update');
     Route::get('/{user}', [UserController::class, 'show'])->name('user.show');
     Route::delete('/{id}', [UserController::class, 'delete'])->name('user.delete');
 });
+
+Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register');
+Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
