@@ -41,6 +41,36 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+$app->singleton(
+    \App\Http\Contracts\UserRepositoryInterface::class,
+    \App\Http\Repositories\UserRepository::class
+);
+
+$app->singleton(
+    \App\Http\Contracts\SpecificationRepositoryInterface::class,
+    \App\Http\Repositories\SpecificationRepository::class
+);
+
+$app->singleton(
+    \App\Http\Contracts\CompanyRepositoryInterface::class,
+    \App\Http\Repositories\CompanyRepository::class
+);
+
+$app->singleton(
+    \App\Http\Contracts\PostRepositoryInterface::class,
+    \App\Http\Repositories\PostRepository::class
+);
+
+$app->singleton(
+    \App\Http\Contracts\CommentRepositoryInterface::class,
+    \App\Http\Repositories\CommentRepository::class
+);
+
+$app->singleton(
+    \App\Http\Contracts\LikeRepositoryInterface::class,
+    \App\Http\Repositories\LikeRepository::class
+);
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application
