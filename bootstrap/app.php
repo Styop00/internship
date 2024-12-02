@@ -11,8 +11,6 @@
 |
 */
 
-use App\Http\Contracts\CompanyRepositoryInterface;
-
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
@@ -49,19 +47,18 @@ $app->singleton(
 );
 
 $app->singleton(
-    CompanyRepositoryInterface::class,
+    \App\Http\Contracts\CompanyRepositoryInterface::class,
     \App\Http\Repositories\CompanyRepository::class
 );
 
-/*
-|--------------------------------------------------------------------------
-| Return The Application
-|--------------------------------------------------------------------------
-|
-| This script returns the application instance. The instance is given to
-| the calling script so we can separate the building of the instances
-| from the actual running of the application and sending responses.
-|
-*/
+$app->singleton(
+    \App\Http\Contracts\PostRepositoryInterface::class,
+    \App\Http\Repositories\PostRepository::class
+);
+
+$app->singleton(
+    \App\Http\Contracts\CommentRepositoryInterface::class,
+    \App\Http\Repositories\CommentRepository::class
+);
 
 return $app;

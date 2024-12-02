@@ -23,13 +23,16 @@ class UserController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index(): JsonResponse {
-        $users = $this->userRepository->all();
+    public function index(): JsonResponse
+    {
 //        $users = User::query()
 //            ->select(['users.id', 'users.name', 'users.email', 'specifications.title'])
 //            ->leftJoin('specification_user', 'specification_user.user_id', '=', 'users.id')
 //            ->leftJoin('specifications', 'specification_user.specification_id', '=', 'specifications.id')
 //            ->get();
+
+        $users = $this->userRepository->all();
+
         return response()->json($users);
     }
 
@@ -37,14 +40,15 @@ class UserController extends Controller
      * @param UserCreateRequest $request
      * @return JsonResponse
      */
-    public function create(UserCreateRequest $request): JsonResponse {
+    public function create(UserCreateRequest $request): JsonResponse
+    {
         try {
             DB::beginTransaction();
             $user = $this->userRepository->create([
-                'name'      => $request->name,
-                'email'     => $request->email,
+                'name' => $request->name,
+                'email' => $request->email,
                 'last_name' => $request->last_name,
-                'password'  => Hash::make('password'),
+                'password' => Hash::make('password'),
             ]);
 
             $user->specifications()->attach([
@@ -80,15 +84,19 @@ class UserController extends Controller
      * @param UpdateUserRequest $request
      * @return int
      */
-    public function update(int $id, UpdateUserRequest $request): int {
-        return $this->userRepository->update(['name' => $request->name], $id);
+    public function update(int $id, UpdateUserRequest $request): int
+    {
+        return $this->userRepository->update([
+            'name' => $request->name
+        ], $id);
     }
 
     /**
      * @param int $id
      * @return int
      */
-    public function delete(int $id): int {
+    public function delete(int $id): int
+    {
 //        $user = User::find($id);
 //        if ($user) {
 //            $user->delete();

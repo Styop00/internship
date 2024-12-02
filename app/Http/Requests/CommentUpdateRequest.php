@@ -5,16 +5,15 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Facades\Auth;
 
-class UserCreateRequest extends FormRequest
+class CommentUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return Auth::check();
+        return true;
     }
 
     /**
@@ -25,24 +24,19 @@ class UserCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'password' => 'required|min:8',
-            'last_name' => 'required|string'
+            'text' => "required|string|max:255",
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'A name is required',
-            'name.max' => 'A name must be max. :max characters',
+            'text.required' => "Comment's title is required",
+            'text.string' => "Comment's title must be string",
+            'text.max' => "Comment's title must be max. :max characters",
         ];
     }
 
-    /**
-     * @param Validator $validator
-     */
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

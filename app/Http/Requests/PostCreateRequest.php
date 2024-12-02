@@ -5,16 +5,15 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Facades\Auth;
 
-class UserCreateRequest extends FormRequest
+class PostCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return Auth::check();
+        return true;
     }
 
     /**
@@ -25,24 +24,25 @@ class UserCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'password' => 'required|min:8',
-            'last_name' => 'required|string'
+            'title' => 'required|string|max:100',
+            'body' => 'string|nullable|max:255',
+            'user_id' => 'required|integer',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'A name is required',
-            'name.max' => 'A name must be max. :max characters',
+            'title.required' => "Post's title is required",
+            'title.string' => "Post's title must be string",
+            'title.max' => "Post's title must be max. :max characters",
+            'body.string' => "Post's body must be string",
+            'body.max' => "Post's body must be max. :max characters",
+            'user_id.required' => "Post's user_id is required",
+            'user_id.integer' => "Post's user_id must be integer",
         ];
     }
 
-    /**
-     * @param Validator $validator
-     */
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

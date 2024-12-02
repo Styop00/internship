@@ -77,18 +77,16 @@ class CompanyController extends Controller
                     ]);
 
                     if ($employeeData['position'] === 'developer' && isset($employeeData['specification'])) {
-
-                        $employee->specifications()->attach(
-                            [
-                                'specification_id' => 1
-                            ]
-                        );
-
+                        $employee->specifications()->attach([
+                            'specification_id' => $employeeData['specification']
+                        ]);
                     }
 
-                    if (isset($employeeData['projects'])) {
-                        $employee->projects()->attach($employeeData['projects']);
-                    }
+/*                    if (isset($employeeData['projects'])) {
+                        foreach ($employeeData['projects'] as $employeeData) {
+
+                        }
+                    }*/ //Todo fix projects login
                 }
             }
 

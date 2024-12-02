@@ -13,3 +13,8 @@ use App\Http\Controllers\PagesController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/test', [TestController::class, 'test']);

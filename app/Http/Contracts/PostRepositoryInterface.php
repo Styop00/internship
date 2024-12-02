@@ -2,16 +2,16 @@
 
 namespace App\Http\Contracts;
 
-use App\Models\User;
+use App\Models\Post;
 use Illuminate\Database\Eloquent\Collection;
 
-interface UserRepositoryInterface
+interface PostRepositoryInterface
 {
     public function all(): Collection;
 
-    public function find(array $data): User|null;
+    public function find(array $data): Post|null;
 
-    public function create(array $data): User;
+    public function create(array $data): Post;
 
     public function update(array $data, int $id): bool;
 
