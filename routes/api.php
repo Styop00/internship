@@ -59,3 +59,13 @@ Route::group(['prefix' => 'posts'], function () {
         Route::delete('/{id}', [PostController::class, 'delete'])->name('post.delete');
 //    });
 });
+
+Route::group(['prefix' => 'comments'], function () {
+//    Route::group(['middleware' => ['auth:sanctum']], function () {
+        Route::get('/', [CommentController::class, 'index'])->name('comment.index');
+        Route::post('/', [CommentController::class, 'create'])->name('comment.create');
+        Route::put('/{id}', [CommentController::class, 'update'])->name('comment.update');
+        Route::get('/{comment}', [CommentController::class, 'show'])->name('comment.show');
+        Route::delete('/{id}', [CommentController::class, 'delete'])->name('comment.delete');
+//    });
+});
