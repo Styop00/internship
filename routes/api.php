@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,11 +24,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//Route::get('/users', [UserController::class, 'index'])->name('user.index');
-//Route::post('/users', [UserController::class, 'create'])->name('user.create');
-//Route::put('/users/{id}', [UserController::class, 'update'])->name('user.update');
-//Route::delete('/users/{id}', [UserController::class, 'delete'])->name('user.delete');
-
 Route::group(['prefix' => 'company'], function () {
     Route::get('/', [CompanyController::class, 'index'])->name('company.index');
     Route::post('/', [CompanyController::class, 'create'])->name('company.create');
@@ -39,33 +35,35 @@ Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.r
 Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
 
 
-Route::group(['prefix' => 'users'], function () {
-    Route::group(['middleware' => ['auth:sanctum']], function () {
-        Route::get('/', [UserController::class, 'index'])->name('user.index');
-        Route::post('/', [UserController::class, 'create'])->name('user.create');
-    });
+Route::group(['prefix' => 'users', 'middleware' => ['auth:sanctum']], function () {
+    Route::get('/', [UserController::class, 'index'])->name('user.index');
+    Route::post('/', [UserController::class, 'create'])->name('user.create');
     Route::put('/{id}', [UserController::class, 'update'])->name('user.update');
     Route::get('/{user}', [UserController::class, 'show'])->name('user.show');
     Route::delete('/{id}', [UserController::class, 'delete'])->name('user.delete');
 });
 
 
-Route::group(['prefix' => 'posts'], function () {
-//    Route::group(['middleware' => ['auth:sanctum']], function () {
-        Route::get('/', [PostController::class, 'index'])->name('post.index');
-        Route::post('/', [PostController::class, 'create'])->name('post.create');
-        Route::put('/{id}', [PostController::class, 'update'])->name('post.update');
-        Route::get('/{post}', [PostController::class, 'show'])->name('post.show');
-        Route::delete('/{id}', [PostController::class, 'delete'])->name('post.delete');
-//    });
+Route::group(['prefix' => 'posts', 'middleware' => ['auth:sanctum']], function () {
+    Route::get('/', [PostController::class, 'index'])->name('post.index');
+    Route::post('/', [PostController::class, 'create'])->name('post.create');
+    Route::put('/{id}', [PostController::class, 'update'])->name('post.update');
+    Route::get('/{post}', [PostController::class, 'show'])->name('post.show');
+    Route::delete('/{id}', [PostController::class, 'delete'])->name('post.delete');
 });
 
-Route::group(['prefix' => 'comments'], function () {
-//    Route::group(['middleware' => ['auth:sanctum']], function () {
-        Route::get('/', [CommentController::class, 'index'])->name('comment.index');
-        Route::post('/', [CommentController::class, 'create'])->name('comment.create');
-        Route::put('/{id}', [CommentController::class, 'update'])->name('comment.update');
-        Route::get('/{comment}', [CommentController::class, 'show'])->name('comment.show');
-        Route::delete('/{id}', [CommentController::class, 'delete'])->name('comment.delete');
-//    });
+Route::group(['prefix' => 'comments', 'middleware' => ['auth:sanctum']], function () {
+    Route::get('/', [CommentController::class, 'index'])->name('comment.index');
+    Route::post('/', [CommentController::class, 'create'])->name('comment.create');
+    Route::put('/{id}', [CommentController::class, 'update'])->name('comment.update');
+    Route::get('/{comment}', [CommentController::class, 'show'])->name('comment.show');
+    Route::delete('/{id}', [CommentController::class, 'delete'])->name('comment.delete');
 });
+
+Route::post('/like/toggle', [LikeController::class, 'toggleLike'])
+    ->middleware('auth:sanctum')
+    ->name('like.toggle');
+
+Route::get('likes', [LikeController::class, 'index'])
+    ->middleware('auth:sanctum')
+    ->name('like.index');

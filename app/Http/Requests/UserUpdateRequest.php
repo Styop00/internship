@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 
-class PostCreateRequest extends FormRequest
+class UserUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,14 +18,13 @@ class PostCreateRequest extends FormRequest
     }
 
     /**
-     * @return string[]
+     * @return array
      */
     public function rules(): array
     {
         return [
             'title' => 'required|string|max:100',
             'body' => 'string|nullable|max:255',
-            'user_id' => 'required|integer',
         ];
     }
 
@@ -37,8 +36,6 @@ class PostCreateRequest extends FormRequest
             'title.max' => "Post's title must be max. :max characters",
             'body.string' => "Post's body must be string",
             'body.max' => "Post's body must be max. :max characters",
-            'user_id.required' => "Post's user_id is required",
-            'user_id.integer' => "Post's user_id must be integer",
         ];
     }
 

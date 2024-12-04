@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Contracts\PostRepositoryInterface;
 use App\Http\Requests\PostCreateRequest;
 use App\Http\Requests\PostUpdateRequest;
+use App\Models\Like;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+
 
 class PostController extends Controller
 {
@@ -21,6 +23,29 @@ class PostController extends Controller
     public function index(): JsonResponse
     {
         $posts = $this->postRepository->all();
+
+        foreach ($posts as $post) {
+            $post->load([
+                'comments',
+                'comments.subComments',
+            ]);
+
+            $likes = Like::where([
+                ['likeable_id', '=', $post->id],
+                ['likeable_type', '=', 'App\\Models\\Post']
+            ])->get();
+
+            $post->likes = $likes;
+
+            foreach ($post->comments as $comment) {
+                $commentLikes = Like::where([
+                    ['likeable_id', '=', $comment->id],
+                    ['likeable_type', '=', 'App\\Models\\Comment']
+                ])->get();
+
+                $comment->likes = $commentLikes;
+            }
+        }
 
         return response()->json($posts);
     }
@@ -66,6 +91,24 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
+        $likes = Like::where([
+            ['likeable_id', '=', $post->id],
+            ['likeable_type', '=', 'App\\Models\\Post']
+        ])->get();
+
+        $post->likes = $likes;
+
+        $post->load('comments.subComments');
+
+        foreach ($post->comments as $comment) {
+            $commentLikes = Like::where([
+                ['likeable_id', '=', $comment->id],
+                ['likeable_type', '=', 'App\\Models\\Comment']
+            ])->get();
+
+            $comment->likes = $commentLikes;
+        }
+
         return response()->json($post);
     }
 

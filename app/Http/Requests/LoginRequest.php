@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 
-class PostCreateRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,30 +18,29 @@ class PostCreateRequest extends FormRequest
     }
 
     /**
-     * @return string[]
+     * @return array
      */
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:100',
-            'body' => 'string|nullable|max:255',
-            'user_id' => 'required|integer',
+            'email' => 'required|email',
+            'password' => 'required|string|min:8',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'title.required' => "Post's title is required",
-            'title.string' => "Post's title must be string",
-            'title.max' => "Post's title must be max. :max characters",
-            'body.string' => "Post's body must be string",
-            'body.max' => "Post's body must be max. :max characters",
-            'user_id.required' => "Post's user_id is required",
-            'user_id.integer' => "Post's user_id must be integer",
+            'email.required' => 'The company email is required.',
+            'email.email' => 'The email must be a valid email address.',
+            'password.required' => 'A password is required.',
+            'password.min' => 'The password must be at least :min characters long.',
         ];
     }
 
+    /**
+     * @param Validator $validator
+     */
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

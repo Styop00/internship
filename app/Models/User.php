@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Model
+class User extends Authenticatable
 {
     use HasFactory, SoftDeletes, HasApiTokens;
 
@@ -27,18 +27,8 @@ class User extends Model
         return $this->hasMany(Post::class);
     }
 
-    public  function likes():HasMany
+    public function likes(): MorphMany
     {
-        return $this->hasMany(Like::class);
+        return $this->morphMany(Like::class, 'likeable');
     }
-
-
-
-    /**
-     * @return BelongsToMany
-     */
-    /*    public function specifications(): BelongsToMany
-        {
-            return $this->belongsToMany(Specification::class);
-        }*/
 }

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 
-class PostCreateRequest extends FormRequest
+class LikeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,30 +18,28 @@ class PostCreateRequest extends FormRequest
     }
 
     /**
-     * @return string[]
+     * @return array
      */
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:100',
-            'body' => 'string|nullable|max:255',
-            'user_id' => 'required|integer',
+            'likeable_id' => 'required|integer',
+            'likeable_type' => 'required|string|in:post,comment',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'title.required' => "Post's title is required",
-            'title.string' => "Post's title must be string",
-            'title.max' => "Post's title must be max. :max characters",
-            'body.string' => "Post's body must be string",
-            'body.max' => "Post's body must be max. :max characters",
-            'user_id.required' => "Post's user_id is required",
-            'user_id.integer' => "Post's user_id must be integer",
+            'likeable_id.required' => 'The ID of the item to like is required.',
+            'likeable_type.required' => 'The type of the item to like is required.',
+            'likeable_type.in' => 'The type must be either "post" or "comment".',
         ];
     }
 
+    /**
+     * @param Validator $validator
+     */
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

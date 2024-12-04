@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Contracts\UserRepositoryInterface;
-use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-
     /**
      * @param UserRepositoryInterface $userRepository
      */
@@ -25,12 +24,6 @@ class UserController extends Controller
      */
     public function index(): JsonResponse
     {
-//        $users = User::query()
-//            ->select(['users.id', 'users.name', 'users.email', 'specifications.title'])
-//            ->leftJoin('specification_user', 'specification_user.user_id', '=', 'users.id')
-//            ->leftJoin('specifications', 'specification_user.specification_id', '=', 'specifications.id')
-//            ->get();
-
         $users = $this->userRepository->all();
 
         return response()->json($users);
@@ -42,13 +35,16 @@ class UserController extends Controller
      */
     public function create(UserCreateRequest $request): JsonResponse
     {
+        $validatedData = $request->validated();
+
         try {
             DB::beginTransaction();
+
             $user = $this->userRepository->create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'last_name' => $request->last_name,
-                'password' => Hash::make('password'),
+                'name' => $validatedData['name'],
+                'last_name' => $validatedData['last_name'],
+                'email' => $validatedData['email'],
+                'password' => Hash::make($request->password),
             ]);
 
             $user->specifications()->attach([
@@ -56,12 +52,20 @@ class UserController extends Controller
             ]);
 
             DB::commit();
-            return response()->json($user);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User created successfully!',
+                'data' => $user,
+            ], 201);
         } catch (\Exception $e) {
+
             DB::rollBack();
+
             return response()->json([
                 'status' => 'error',
-            ]);
+                'message' => $e->getMessage(),
+            ], 500);
         }
 
     }
@@ -72,19 +76,15 @@ class UserController extends Controller
      */
     public function show(User $user): JsonResponse
     {
-//        with(['employees.projects', 'owners']);
-//        $user = User::find($id);
-//        $user = User::where('id', $id)->first();
-
         return response()->json($user);
     }
 
     /**
      * @param int $id
-     * @param UpdateUserRequest $request
+     * @param UserUpdateRequest $request
      * @return int
      */
-    public function update(int $id, UpdateUserRequest $request): int
+    public function update(int $id, UserUpdateRequest $request): int
     {
         return $this->userRepository->update([
             'name' => $request->name
@@ -97,10 +97,6 @@ class UserController extends Controller
      */
     public function delete(int $id): int
     {
-//        $user = User::find($id);
-//        if ($user) {
-//            $user->delete();
-//        }
         return $this->userRepository->delete($id);
     }
 }
