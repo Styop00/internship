@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,8 +36,24 @@ Route::group(['prefix' => 'users'], function () {
 });
 
 Route::group(['prefix' => 'companies'], function () {
-    Route::get('/', [CompanyController::class, 'index'])->name('user.index');
-    Route::post('/', [CompanyController::class, 'create'])->name('user.create');
-    Route::put('/{id}', [CompanyController::class, 'update'])->name('user.update');
-    Route::delete('/{id}', [CompanyController::class, 'delete'])->name('user.delete');
+    Route::get('/', [CompanyController::class, 'index'])->name('company.index');
+    Route::post('/', [CompanyController::class, 'create'])->name('company.create');
+    Route::put('/{id}', [CompanyController::class, 'update'])->name('company.update');
+    Route::delete('/{id}', [CompanyController::class, 'delete'])->name('company.delete');
 });
+
+Route::group(['prefix' => 'posts'], function () {
+    Route::get('/', [PostController::class, 'index'])->name('post.index');
+    Route::post('/', [PostController::class, 'create'])->name('post.create');
+    Route::put('/{id}', [PostController::class, 'update'])->name('post.update');
+    Route::delete('/{id}', [PostController::class, 'delete'])->name('post.delete');
+});
+
+Route::group(['prefix' => 'comments'], function () {
+    Route::get('/', [CommentController::class, 'index'])->name('comment.index');
+    Route::post('/', [CommentController::class, 'create'])->name('comment.create');
+    Route::put('/{id}', [CommentController::class, 'update'])->name('comment.update');
+    Route::delete('/{id}', [CommentController::class, 'delete'])->name('comment.delete');
+});
+
+

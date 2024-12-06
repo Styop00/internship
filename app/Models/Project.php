@@ -5,26 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Company extends Model
+class Project extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'address',
-        'email',
+        'title'
     ];
 
-
+    /**
+     * @return BelongsToMany
+     */
     public function employees(): BelongsToMany
     {
-        return $this->belongsToMany( Employee::class);
-    }
-
-    public function owner(): HasOne
-    {
-        return $this->hasOne( Owner::class);
+        return $this->belongsToMany(Employee::class);
     }
 }
