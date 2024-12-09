@@ -19,25 +19,21 @@ class Comment extends Model
         'parent_id'
     ];
 
-    /**
-     * @return MorphMany
-     */
     public function likes(): MorphMany
     {
         return $this->morphMany(Like::class, 'likeable');
     }
 
-    /**
-     * @return BelongsTo
-     */
+    public function subComments(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'parent_id');
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);

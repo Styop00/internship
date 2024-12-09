@@ -46,7 +46,7 @@ class LikeRequest extends FormRequest
      * @param Validator $validator
      * @return void
      */
-    public function failedValidation(Validator $validator)
+    public function failedValidation(Validator $validator): void
     {
         throw new HttpResponseException(response()->json([
             'message' => $validator->messages()->first()

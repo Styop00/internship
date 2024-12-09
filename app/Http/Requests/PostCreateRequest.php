@@ -24,7 +24,6 @@ class PostCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer',
             'title' => 'string|required_without:body|max:100',
             'body' => 'string|required_without:title|max:400'
         ];
@@ -33,8 +32,6 @@ class PostCreateRequest extends FormRequest
     public function messages() : array
     {
         return [
-            'user_id.required' => 'Post User ID is required',
-            'user_id.integer' => 'Post User ID must be integer',
             'title.string' => 'Post title must be string',
             'title.required_without:body' => 'Post title or Body are Required',
             'title.max' => 'Post title must be max. :max characters',

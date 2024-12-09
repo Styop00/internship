@@ -21,7 +21,6 @@ class CommentCreateRequest extends FormRequest
     {
         return [
             'text' => "required|string|max:255",
-            'user_id' => "required|integer",
             'post_id' => "required|integer",
             'parent_id' => "integer|nullable",
         ];
@@ -33,8 +32,6 @@ class CommentCreateRequest extends FormRequest
             'text.required' => "Comment`s title is required",
             'text.string' => "Comment`s title must be string",
             'text.max' => "Comment`s title must be max. :max characters",
-            'user_id.required' => "Comment`s user_id is required",
-            'user_id.integer' => "Comment`s user_id must be integer",
             'post_id.required' => "Comment`s post_id is required",
             'post_id.integer' => "Comment`s post_id must be integer",
             'parent_id.required' => "Comment`s parent_id is required",

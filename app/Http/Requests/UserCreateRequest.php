@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class UserCreateRequest extends FormRequest
 {
@@ -25,17 +26,25 @@ class UserCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email',
+            'email' => 'required|unique|email:rfc,dns',
             'password' => 'required|min:8',
-            'last_name' => 'required|string'
+            'last_name' => 'required|string|max:255'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'A name is required',
-            'name.max' => 'A name must be max. :max characters',
+            'name.required' => "A name is required",
+            'name.string' => "A name must be string",
+            'name.max' => "A name must contain max. :max characters",
+            'email.required' => "Email is required",
+            'email.unique' => "Email is already in use",
+            'password.required' => "Password is required",
+            'password.min' => "password must contain at least. :min characters",
+            'last_name.required' => "Last name is required",
+            'last_name.string' => "Last_name must be string",
+            'last_name.max' => "Last_name must contain max. :max characters"
         ];
     }
 

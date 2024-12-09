@@ -2,7 +2,9 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use App\Http\Contracts\UserRepositoryInterface;
+use App\Http\Repositories\UserRepository;
+use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
@@ -11,6 +13,9 @@ class ExampleTest extends TestCase
      */
     public function test_that_true_is_true(): void
     {
+
+        $userRepository = app()->make(UserRepository::class);
+        $userRepository->all();
         $this->assertTrue(true);
     }
 }

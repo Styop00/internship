@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,12 +30,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Route::delete('/users/{id}', [UserController::class, 'delete'])->name('user.delete');
 
 Route::group(['prefix' => 'users'], function () {
-    Route::get('/', [UserController::class, 'index'])->name('user.index');
-    Route::post('/', [UserController::class, 'create'])->name('user.create');
-    Route::put('/{id}', [UserController::class, 'update'])->name('user.update');
-    Route::get('/{user}', [UserController::class, 'show'])->name('user.show');
-    Route::delete('/{id}', [UserController::class, 'delete'])->name('user.delete');
+    Route::group(['middleware' => ['auth:sanctum']], function () {
+        Route::get('/', [UserController::class, 'index'])->name('user.index');
+        Route::post('/', [UserController::class, 'create'])->name('user.create');
+        Route::put('/{id}', [UserController::class, 'update'])->name('user.update');
+        Route::get('/{user}', [UserController::class, 'show'])->name('user.show');
+        Route::delete('/{id}', [UserController::class, 'delete'])->name('user.delete');
+    });
 });
+
 
 Route::group(['prefix' => 'companies'], function () {
     Route::get('/', [CompanyController::class, 'index'])->name('company.index');
@@ -43,17 +48,32 @@ Route::group(['prefix' => 'companies'], function () {
 });
 
 Route::group(['prefix' => 'posts'], function () {
-    Route::get('/', [PostController::class, 'index'])->name('post.index');
-    Route::post('/', [PostController::class, 'create'])->name('post.create');
-    Route::put('/{id}', [PostController::class, 'update'])->name('post.update');
-    Route::delete('/{id}', [PostController::class, 'delete'])->name('post.delete');
+    Route::group(['middleware' => ['auth:sanctum']], function () {
+        Route::get('/', [PostController::class, 'index'])->name('post.index');
+        Route::post('/', [PostController::class, 'create'])->name('post.create');
+        Route::put('/{id}', [PostController::class, 'update'])->name('post.update');
+        Route::delete('/{id}', [PostController::class, 'delete'])->name('post.delete');
+    });
 });
 
 Route::group(['prefix' => 'comments'], function () {
-    Route::get('/', [CommentController::class, 'index'])->name('comment.index');
-    Route::post('/', [CommentController::class, 'create'])->name('comment.create');
-    Route::put('/{id}', [CommentController::class, 'update'])->name('comment.update');
-    Route::delete('/{id}', [CommentController::class, 'delete'])->name('comment.delete');
+    Route::group(['middleware' => ['auth:sanctum']], function () {
+        Route::get('/', [CommentController::class, 'index'])->name('comment.index');
+        Route::post('/', [CommentController::class, 'create'])->name('comment.create');
+        Route::put('/{id}', [CommentController::class, 'update'])->name('comment.update');
+        Route::delete('/{id}', [CommentController::class, 'delete'])->name('comment.delete');
+    });
 });
 
+
+Route::group(['prefix' => 'likes'], function () {
+    Route::group(['middleware' => ['auth:sanctum']], function () {
+        Route::get('/', [LikeController::class, 'index'])->name('like.index');
+        Route::post('/', [LikeController::class, 'toggle'])->name('like.toggle');
+    });
+});
+
+
+Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register');
+Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
 

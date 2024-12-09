@@ -44,9 +44,9 @@ class UserRepository implements UserRepositoryInterface
      * @param int $id
      * @return User|null
      */
-    public function find(int $id): User|null
+    public function find(array $data): User|null
     {
-        return $this->user->where('id', $id)->first();
+        return $this->user->where($data)->first();
     }
 
     /**
