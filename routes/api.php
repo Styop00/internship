@@ -69,7 +69,7 @@ Route::group(['prefix' => 'comments'], function () {
 Route::group(['prefix' => 'likes'], function () {
     Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/', [LikeController::class, 'index'])->name('like.index');
-        Route::post('/', [LikeController::class, 'toggle'])->name('like.toggle');
+        Route::post('/', [LikeController::class, 'toggle'])->name('like.toggle`');
     });
 });
 
